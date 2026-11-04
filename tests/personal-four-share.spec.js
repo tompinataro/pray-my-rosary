@@ -127,9 +127,7 @@ test("four-prayer Share requires all four personal recordings in the selected wo
 }) => {
   await page.goto("/");
   await expect(page.locator("#home-share-four")).toBeHidden();
-  await expect(page.locator("#personal-share-help")).toContainText(
-    "After you record the four prayers above,",
-  );
+  await expect(page.locator("#personal-share-help")).toHaveCount(0);
   await save(page, ids.slice(0, 3));
   await expect(page.locator("#home-share-four")).toBeHidden();
   await save(page, ["father"]);
@@ -312,32 +310,26 @@ test("saving the fourth prayer and replacing a take updates combined Share witho
   );
 });
 
-test("home sharing instruction has the exact three centered lines and safe text enlargement", async ({
+test("Rosary home omits four-prayer instructions and stays readable at phone widths", async ({
   page,
 }) => {
   await page.goto("/");
-  const note = page.locator("#personal-share-help");
-  await expect(note.locator("span")).toHaveText([
+  await expect(page.locator("#personal-share-help")).toHaveCount(0);
+  await expect(page.locator("#main")).not.toContainText(
     "After you record the four prayers above,",
+  );
+  await expect(page.locator("#main")).not.toContainText(
     "in your own voice, you can share them.",
-    "🙏",
-  ]);
-  await expect(note.locator("br")).toHaveCount(2);
-  await expect(note).toHaveCSS("text-align", "center");
+  );
+  await expect(page.locator("#main")).not.toContainText("🙏");
   for (const width of [320, 390, 1280]) {
     await page.setViewportSize({ width, height: 1000 });
-    const result = await note.evaluate((el) => ({
-      lines: [...el.querySelectorAll("span")].map((span) => {
-        const range = document.createRange();
-        range.selectNodeContents(span);
-        return range.getClientRects().length;
-      }),
-      overflow:
-        el.scrollWidth > el.clientWidth ||
-        document.documentElement.scrollWidth > innerWidth,
-    }));
-    expect(result.lines).toEqual([1, 1, 1]);
-    expect(result.overflow).toBe(false);
+    await expect(page.locator("#rosary-open")).toBeVisible();
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth,
+      ),
+    ).toBe(true);
     await page.screenshot({
       path: `test-results/${test.info().project.name}-home-copy-${width}.png`,
     });
@@ -345,10 +337,8 @@ test("home sharing instruction has the exact three centered lines and safe text 
   await page.setViewportSize({ width: 320, height: 1000 });
   await page.evaluate(() => (document.documentElement.style.fontSize = "32px"));
   expect(
-    await note.evaluate(
-      (el) =>
-        el.scrollWidth <= el.clientWidth &&
-        document.documentElement.scrollWidth <= innerWidth,
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
     ),
   ).toBe(true);
   await page.screenshot({
