@@ -98,8 +98,8 @@ async function sourceSnapshot(page) {
 }
 async function destination(page) {
   return page.evaluate(async () => ({
-    settings: localStorage.getItem("smr-settings"),
-    prompt: localStorage.getItem("smr-prompt:current:hail"),
+    settings: localStorage.getItem("pmr-settings"),
+    prompt: localStorage.getItem("pmr-prompt:current:hail"),
     recordings: await Promise.all(
       (await (await import("./storage.js")).allRecordings()).map(async (r) => ({
         key: r.key,
@@ -154,7 +154,11 @@ test("same-origin namespaces remain isolated until explicit confirmed copy; canc
     };
   });
   await page.goto("/");
-  await expect(page.locator("h1")).toHaveText("Share My Rosary");
+  await expect(page.locator("h1")).toHaveText("Pray My Rosary");
+  await expect(page).toHaveTitle("Pray My Rosary");
+  expect(await page.evaluate(() => window.openedDatabases)).toContain(
+    "pray-my-rosary",
+  );
   expect((await destination(page)).recordings).toHaveLength(0);
   expect((await destination(page)).settings).toBeNull();
   expect(await page.evaluate(() => window.openedDatabases)).not.toContain(
@@ -204,10 +208,10 @@ test("copy preserves all wording keys and bytes, reloads, and never overwrites n
       },
     ]);
     localStorage.setItem(
-      "smr-settings",
+      "pmr-settings",
       JSON.stringify({ version: "contemporary", sender: "Newer" }),
     );
-    localStorage.setItem("smr-prompt:current:hail", "newer prompt");
+    localStorage.setItem("pmr-prompt:current:hail", "newer prompt");
   });
   await page.reload();
   await openCopy(page);
@@ -251,12 +255,14 @@ test("legacy backup import skips existing, own backup roundtrip and explicit rep
   const download = page.waitForEvent("download");
   await page.locator("#backup").click();
   const { readFile } = await import("node:fs/promises");
-  const ownBackup = JSON.parse(
-    await readFile(await (await download).path(), "utf8"),
+  const exported = await download;
+  expect(exported.suggestedFilename()).toMatch(
+    /^Pray My Rosary - Private backup/,
   );
-  expect(ownBackup.format).toBe("share-my-rosary");
+  const ownBackup = JSON.parse(await readFile(await exported.path(), "utf8"));
+  expect(ownBackup.format).toBe("pray-my-rosary");
   expect(ownBackup.recordings).toHaveLength(4);
-  await upload(page, backup("share-my-rosary"));
+  await upload(page, backup("pray-my-rosary"));
   await expect(page.locator("#restore-policy")).toContainText(
     "will be replaced",
   );
@@ -265,7 +271,7 @@ test("legacy backup import skips existing, own backup roundtrip and explicit rep
     (await destination(page)).recordings.find((r) => r.key === "current:hail")
       .bytes,
   ).toEqual([42]);
-  await upload(page, backup("share-my-rosary"));
+  await upload(page, backup("pray-my-rosary"));
   await page.locator("#restore-confirm").click();
   await expect(page.locator("#restore-dialog")).toBeHidden();
   expect(
@@ -567,7 +573,7 @@ test("a deferred backup file read blocks overlapping legacy Copy and keeps the s
       return read.call(this);
     };
   });
-  await upload(page, backup("share-my-rosary"));
+  await upload(page, backup("pray-my-rosary"));
   await expect
     .poll(() => page.evaluate(() => typeof window.finishBackupRead))
     .toBe("function");
@@ -579,7 +585,7 @@ test("a deferred backup file read blocks overlapping legacy Copy and keeps the s
   await page.evaluate(() => window.finishBackupRead());
   await expect(page.locator("#restore-dialog")).toBeVisible();
   await expect(page.locator("#restore-summary")).toContainText(
-    "Share My Rosary",
+    "Pray My Rosary",
   );
   await page.locator("#restore-confirm").click();
   await expect(page.locator("#restore-dialog")).toBeHidden();

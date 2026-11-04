@@ -12,9 +12,9 @@ test.beforeEach(async ({ page }, testInfo) => {
   // Existing regression suite exercises the unchanged Current wording explicitly.
   if (!testInfo.title.startsWith("Classic wording is explicit"))
     await page.addInitScript(() => {
-      if (!localStorage.getItem("smr-settings"))
+      if (!localStorage.getItem("pmr-settings"))
         localStorage.setItem(
-          "smr-settings",
+          "pmr-settings",
           JSON.stringify({ version: "current" }),
         );
     });
@@ -140,7 +140,7 @@ test("responsive layout, mystery selection, settings and quiet reading view", as
   page,
 }) => {
   await page.goto("/");
-  await expect(page.locator("h1")).toContainText("Share My Rosary");
+  await expect(page.locator("h1")).toContainText("Pray My Rosary");
   await expect(page.locator("#start")).toBeDisabled();
   await expect(page.locator("#missing")).toHaveCount(0);
   await openGlobalSettings(page);
@@ -443,12 +443,12 @@ test("native share branch receives a genuine audio file, cancellation is respect
 });
 test("repository subpath and accessible page/modal", async ({ page }) => {
   const { default: AxeBuilder } = await import("@axe-core/playwright");
-  await page.route("**/share-my-rosary/**", async (route) => {
-    const url = route.request().url().replace("/share-my-rosary/", "/");
+  await page.route("**/pray-my-rosary/**", async (route) => {
+    const url = route.request().url().replace("/pray-my-rosary/", "/");
     const response = await route.fetch({ url });
     await route.fulfill({ response });
   });
-  await page.goto("/share-my-rosary/");
+  await page.goto("/pray-my-rosary/");
   await expect(page.locator("#missing")).toHaveCount(0);
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
   await page.locator('#prayers [data-prayer="father"]').click();
@@ -659,7 +659,7 @@ test("old Traditional preference migrates to Current Catholic without deleting a
   await seed(page, { legacyOnly: true });
   await page.evaluate(() => {
     localStorage.setItem(
-      "smr-settings",
+      "pmr-settings",
       JSON.stringify({
         version: "traditional",
         mode: "decade",
@@ -668,7 +668,7 @@ test("old Traditional preference migrates to Current Catholic without deleting a
       }),
     );
     localStorage.setItem(
-      "smr-prompt:current:hail",
+      "pmr-prompt:current:hail",
       "Old paste prompt must not replace the prayer.",
     );
   });
@@ -767,7 +767,7 @@ test("incomplete Current rosary identifies required personal recordings; ready s
   );
   await page.addInitScript(() =>
     localStorage.setItem(
-      "smr-settings",
+      "pmr-settings",
       JSON.stringify({
         version: "current",
         mode: "whole",
@@ -810,7 +810,7 @@ test("Classic wording is explicit and old Current recording stays in its own sel
   page,
 }) => {
   // Override the historical-regression fixture: this test starts as a new user.
-  await page.addInitScript(() => localStorage.removeItem("smr-settings"));
+  await page.addInitScript(() => localStorage.removeItem("pmr-settings"));
   await page.goto("/");
   await openGlobalSettings(page);
   await expect(page.locator("#wording")).toHaveValue("classic");

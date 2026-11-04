@@ -1,4 +1,4 @@
-name: Publish Share My Rosary (manual authorization only)
+name: Publish Pray My Rosary (manual authorization only)
 on:
   workflow_dispatch:
 permissions:

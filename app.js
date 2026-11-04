@@ -52,7 +52,7 @@ let settings = { ...defaults },
   sessionOutput = null,
   sessionURL = null;
 try {
-  const s = JSON.parse(localStorage.getItem("smr-settings") || "{}");
+  const s = JSON.parse(localStorage.getItem("pmr-settings") || "{}");
   storedVersion = s.version;
   settings = { ...defaults, ...s };
   settings.version = preferredVersion(settings.version);
@@ -101,7 +101,7 @@ const run = (fn) => async () => {
 };
 function preferences() {
   try {
-    localStorage.setItem("smr-settings", JSON.stringify(settings));
+    localStorage.setItem("pmr-settings", JSON.stringify(settings));
   } catch {
     notice(
       "Preferences could not be saved. Allow browser storage, or keep a backup.",
@@ -585,7 +585,7 @@ async function share(blob, name) {
     try {
       await navigator.share({
         files: [file],
-        title: "Share My Rosary",
+        title: "Pray My Rosary",
         text: dedication() || "A prayer shared with love.",
       });
       return;
@@ -810,14 +810,14 @@ $("backup").onclick = run(async () => {
     for (const v of Object.keys(versions))
       for (const p of library) {
         const key = keyFor(v, p.id);
-        const value = localStorage.getItem("smr-prompt:" + key);
+        const value = localStorage.getItem("pmr-prompt:" + key);
         if (value) prompts[key] = value;
       }
     download(
       new Blob(
         [
           JSON.stringify({
-            format: "share-my-rosary",
+            format: "pray-my-rosary",
             version: 1,
             createdAt: new Date().toISOString(),
             preferences: settings,
@@ -955,8 +955,8 @@ $("restore-confirm").onclick = run(async () => {
       )
         continue;
       try {
-        if (!legacy || localStorage.getItem("smr-prompt:" + key) === null)
-          localStorage.setItem("smr-prompt:" + key, text);
+        if (!legacy || localStorage.getItem("pmr-prompt:" + key) === null)
+          localStorage.setItem("pmr-prompt:" + key, text);
       } catch {
         promptFailure = true;
       }

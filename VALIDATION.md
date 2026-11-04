@@ -1,12 +1,12 @@
 # Standalone local verification
 
-This project is a local preparation, not a published service. Source baseline: Share My Prayer `0cc4321de1e5eacdd0681cc5c79b6fec44ed0bb0`.
+Source baseline: Share My Prayer `0cc4321de1e5eacdd0681cc5c79b6fec44ed0bb0`.
 
 Tests cover existing recording/playback/export/navigation behavior and additional migration cases: same-origin legacy sentinels remain unchanged before opt-in and after cancel/copy/repeat/failure; legacy and own backup formats; original wording keys and bytes; newer destination takes/preferences/prompts win; aborted probing does not create a legacy database; concurrent copy requests cannot overwrite a destination key; malformed imports make no changes.
 
 The app retains the existing source and permission register in SOURCES.md and copies approved narration assets without byte changes. All public build inputs are explicit allowlist entries. No private recording or backup file was copied from the user's browser or filesystem.
 
-Publication, physical-device microphone/background testing and native share-sheet acceptance are outstanding. See the parent task's final verification report for exact command results.
+Physical-device microphone/background testing and native share-sheet acceptance remain outstanding. The parent handoff records publication status and exact command results.
 
 ## Final local checks — November 4, 2026
 
@@ -18,4 +18,6 @@ Publication, physical-device microphone/background testing and native share-shee
 - Build passed: 16 allowlisted static files and 35 checksum-verified narrator assets.
 - Prettier check passed for changed production, migration tests, and documentation. Node syntax checks passed for top-level, scripts, and tests JavaScript.
 
-Local commits are recorded in the parent handoff report. No remote, public repository creation, push or publication occurred.
+The Pray My Rosary rename was verified with 33 unit tests, 101 browser passes and 3 explicit skips; the original app passed 30 unit tests and 48 browser tests, and the renamed same-origin integration passed all 4 cases. Both builds, syntax, formatting and package allowlist/hash audits passed. Legacy Share My Prayer imports remain unchanged.
+
+Local and deployed commit identities are recorded in the parent handoff. Approval covers publishing only Pray My Rosary; the original cleanup remains local. No actual private recording or backup was transferred.

@@ -1,13 +1,13 @@
 let connection;
 export function db() {
   return (connection ??= new Promise((resolve, reject) => {
-    const r = indexedDB.open("share-my-rosary", 1);
+    const r = indexedDB.open("pray-my-rosary", 1);
     r.onupgradeneeded = () =>
       r.result.createObjectStore("recordings", { keyPath: "key" });
     r.onsuccess = () => resolve(r.result);
     r.onerror = () => reject(r.error);
     r.onblocked = () =>
-      reject(Error("Close other Share My Rosary tabs, then reload."));
+      reject(Error("Close other Pray My Rosary tabs, then reload."));
   }));
 }
 export async function allRecordings() {

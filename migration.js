@@ -87,16 +87,16 @@ export function restorePreview(data) {
     ...new Set(data.recordings.map((record) => versions[record.version])),
   ];
   return {
-    summary: `${legacy ? "Share My Prayer migration" : "Share My Rosary backup"}: ${data.recordings.length} recordings across ${wordings.length} wording versions (${wordings.join(", ")}).`,
+    summary: `${legacy ? "Share My Prayer migration" : "Pray My Rosary backup"}: ${data.recordings.length} recordings across ${wordings.length} wording versions (${wordings.join(", ")}).`,
     policy: legacy
-      ? "Only missing recordings will be copied. Existing Share My Rosary takes, preferences and prompts stay unchanged. Share My Prayer is never changed."
+      ? "Only missing recordings will be copied. Existing Pray My Rosary takes, preferences and prompts stay unchanged. Share My Prayer is never changed."
       : "Recordings with the same prayer and wording will be replaced. Other recordings and current preferences stay unchanged.",
   };
 }
 
 export function copyMissingSettings(preferences, defaults) {
   try {
-    if (!preferences || localStorage.getItem("smr-settings") !== null)
+    if (!preferences || localStorage.getItem("pmr-settings") !== null)
       return {};
     const copy = {
       ...defaults,
@@ -113,7 +113,7 @@ export function copyMissingSettings(preferences, defaults) {
       +preferences.decade < 5
     )
       copy.decade = +preferences.decade;
-    localStorage.setItem("smr-settings", JSON.stringify(copy));
+    localStorage.setItem("pmr-settings", JSON.stringify(copy));
     return { settings: copy };
   } catch {
     return { failed: true };

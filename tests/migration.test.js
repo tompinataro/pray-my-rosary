@@ -10,7 +10,7 @@ test("own and legacy v1 backup formats are explicit and unknown formats remain r
     type: "audio/wav",
     data: "AQ==",
   };
-  for (const format of ["share-my-prayer", "share-my-rosary"]) {
+  for (const format of ["share-my-prayer", "pray-my-rosary"]) {
     const data = { format, version: 1, recordings: [record] };
     assert.equal(validateBackup(data), data);
     assert.match(
@@ -54,15 +54,15 @@ test("legacy preferences fill only an absent own key and report localStorage fai
     assert.equal(result.settings.version, "current");
     assert.equal(result.settings.mode, "whole");
     values.set(
-      "smr-settings",
+      "pmr-settings",
       JSON.stringify({ version: "contemporary", sender: "Newer" }),
     );
     assert.deepEqual(
       copyMissingSettings({ version: "current", sender: "Legacy" }, defaults),
       {},
     );
-    assert.equal(JSON.parse(values.get("smr-settings")).sender, "Newer");
-    values.delete("smr-settings");
+    assert.equal(JSON.parse(values.get("pmr-settings")).sender, "Newer");
+    values.delete("pmr-settings");
     globalThis.localStorage.setItem = () => {
       throw Error("quota");
     };

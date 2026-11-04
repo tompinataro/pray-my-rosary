@@ -15,7 +15,7 @@ for (const mime of ["audio/mp3", "audio/mpeg"]) {
       );
       await page.addInitScript(() =>
         localStorage.setItem(
-          "smr-settings",
+          "pmr-settings",
           JSON.stringify({ version: "classic" }),
         ),
       );

@@ -114,7 +114,7 @@ export function extension(type) {
 }
 export function filename(title, settings, ext) {
   return (
-    `Share My Rosary - ${title}${settings.subtitle && settings.sender ? ` - From ${settings.sender}, with Love` : ""}`
+    `Pray My Rosary - ${title}${settings.subtitle && settings.sender ? ` - From ${settings.sender}, with Love` : ""}`
       .replace(/[<>:"/\\|?*\u0000-\u001f]/g, "")
       .slice(0, 180) +
     "." +
@@ -153,13 +153,13 @@ export function pcm16(channels) {
 }
 export function validateBackup(data) {
   if (
-    !["share-my-prayer", "share-my-rosary"].includes(data?.format) ||
+    !["share-my-prayer", "pray-my-rosary"].includes(data?.format) ||
     data.version !== 1 ||
     !Array.isArray(data.recordings) ||
     data.recordings.length > library.length * Object.keys(versions).length
   )
     throw Error(
-      "This is not a supported Share My Rosary or Share My Prayer backup.",
+      "This is not a supported Pray My Rosary or Share My Prayer backup.",
     );
   const seen = new Set();
   for (const r of data.recordings) {

@@ -70,6 +70,7 @@ test("accurate types and safe dedication filenames", () => {
     { subtitle: true, sender: "Tom/Family" },
     "wav",
   );
+  assert.ok(name.startsWith("Pray My Rosary - Joyful"));
   assert.ok(name.includes("From TomFamily, with Love"));
   assert.ok(name.endsWith(".wav"));
 });

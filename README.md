@@ -1,8 +1,8 @@
-# Share My Rosary — local standalone preparation
+# Pray My Rosary
 
 This is a standalone static Rosary app prepared from Share My Prayer revision `0cc4321de1e5eacdd0681cc5c79b6fec44ed0bb0`.
 
-**Publication is pending approval.** No GitHub repository or remote has been created. The proposed name is `tompinataro/share-my-rosary` and the proposed Pages path is `https://tompinataro.github.io/share-my-rosary/`; that destination is not established by this project.
+Tom approved publication as the public `tompinataro/pray-my-rosary` repository with GitHub Pages at `https://tompinataro.github.io/pray-my-rosary/`. The parent handoff records the exact deployed commit, workflow and live verification.
 
 The app retains eight prayer recordings, 20 mystery announcements, Classic/Current/Contemporary wordings, legacy Traditional recording compatibility, decade/full-Rosary playback, local WAV assembly, individual and session sharing/download fallback, and private backup/restore. Existing reviewed Bella assets are byte-identical copies of the source revision. The four ordinary prayers are also needed when assembling a Rosary.
 
@@ -23,10 +23,12 @@ There are no configured separate lint/typecheck scripts. Prettier provides the a
 
 ## Storage and migration
 
-Share My Rosary uses IndexedDB **`share-my-rosary`**, preferences **`smr-settings`**, and custom prompts **`smr-prompt:<version>:<prayer>`**. It never automatically opens Share My Prayer's database or reads its preferences. GitHub Pages project paths share an origin, so these separate namespaces are necessary.
+Pray My Rosary uses IndexedDB **`pray-my-rosary`**, preferences **`pmr-settings`**, and custom prompts **`pmr-prompt:<version>:<prayer>`**. It never automatically opens Share My Prayer's database or reads its preferences. GitHub Pages project paths share an origin, so these separate namespaces are necessary.
+
+The standalone app has not launched; its database, preference keys and own-backup format consistently use the chosen Pray My Rosary identity. Legacy `share-my-prayer` imports retain their original format and missing-only policy. No browser data is renamed or deleted by this source change.
 
 See [MIGRATION.md](MIGRATION.md) for explicit same-origin copying and private-file import. Both keep source recordings unchanged. Nothing synchronizes between the apps after a copy.
 
-## Publication gate
+## Publication scope
 
-Before any public release: approve the new repository and destination, review the local build and migration evidence, publish and verify this standalone app, and only then publish the original app's Rosary navigation removal. The copied GitHub Actions workflow is manual-only; its presence is not permission to create a repository or dispatch publication.
+Publication approval covers this standalone app and its approved public narrator assets. The original Share My Prayer cleanup remains local and requires separate authorization to publish. The GitHub Actions Pages workflow is manual-only; future publication is not automatic on push.
